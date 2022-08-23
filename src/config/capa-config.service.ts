@@ -22,7 +22,7 @@ export class CAPAConfigService {
   get nodeEnv(): Environment {
     return this.configService.get<Environment>(
       'NODE_ENV',
-      Environment.PRODUCTION,
+      Environment.DEFAULT,
     );
   }
 

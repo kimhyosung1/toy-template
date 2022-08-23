@@ -1,3 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
+import { IsString, Length } from 'class-validator';
 import { UserStatus } from 'src/common/common_type';
 import {
   BaseEntity,
@@ -21,6 +24,10 @@ export class UserEntity extends BaseEntity {
     name: 'id',
     comment: '카파 유저 아이디',
   })
+  @ApiProperty( { type: String, required: false } )
+  @Length(6, 320)
+  @IsString()
+  @Expose()
   id!: string;
 
   /**
@@ -30,6 +37,8 @@ export class UserEntity extends BaseEntity {
    */
   @Column({ name: 'seq', type: 'int8', unique: true, comment: '순차 인덱스' })
   @Generated('increment')
+  @ApiProperty( { type: Number, required: false } )
+  @Expose()
   seq!: number;
 
   /**
@@ -45,6 +54,10 @@ export class UserEntity extends BaseEntity {
     unique: true,
     where: `status != 'DELETED'`,
   })
+  @ApiProperty( { type: String, required: false } )
+  @Length(6, 320)
+  @IsString()
+  @Expose()
   email!: string;
 
   /**
@@ -56,6 +69,8 @@ export class UserEntity extends BaseEntity {
     length: 255,
     comment: '패스워드 argon2',
   })
+  @ApiProperty( { type: String, required: false } )
+  @Expose()
   password!: string;
 
   /**
@@ -70,6 +85,8 @@ export class UserEntity extends BaseEntity {
     default: UserStatus.REGISTERED,
     comment: '상태 CAPAUserStatus',
   })
+  @ApiProperty( { type: UserStatus, required: false } )
+  @Expose()
   status!: UserStatus;
 
   /**
@@ -81,7 +98,9 @@ export class UserEntity extends BaseEntity {
     nullable: true,
     comment: '마지막 로그인 시간',
   })
-  lastLoginAt?: Date | null;
+  @ApiProperty( { type: Date, required: true } )
+  @Expose()
+  lastLoginAt?: Date;
 
   /**
    * lastLogoutAt
@@ -92,7 +111,9 @@ export class UserEntity extends BaseEntity {
     nullable: true,
     comment: '마지막 로그아웃 시간',
   })
-  lastLogoutAt?: Date | null;
+  @ApiProperty( { type: Date, required: true } )
+  @Expose()
+  lastLogoutAt?: Date;
 
   /**
    * createdAt
@@ -103,6 +124,8 @@ export class UserEntity extends BaseEntity {
     comment: '생성일',
     update: false,
   })
+  @ApiProperty( { type: Date, required: false } )
+  @Expose()
   createdAt!: Date;
 
   /**
@@ -113,5 +136,7 @@ export class UserEntity extends BaseEntity {
     type: 'timestamptz',
     comment: '수정일',
   })
+  @ApiProperty( { type: Date, required: false } )
+  @Expose()
   updatedAt!: Date;
 }

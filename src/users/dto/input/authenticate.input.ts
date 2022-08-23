@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { UserModel } from '../model/user.model';
+import { UserEntity } from 'src/users/database/entities/tbl_user_entity';
 
-export class AuthenticationInput extends UserModel {
-  @ApiProperty()
+export class AuthenticationInput extends PickType(UserEntity, ['email']) {
+  @ApiProperty( { required: false })
   @Expose()
   @IsOptional()
   deviceToken?: string;

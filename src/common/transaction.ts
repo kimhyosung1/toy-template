@@ -16,6 +16,7 @@ export const TransactionBlock = async (
     await queryRunner.rollbackTransaction();
     if (errorHandler != null) errorHandler(error);
     else {
+      console.log('error = ', error)
       throw new BadRequestException();
     }
   } finally {

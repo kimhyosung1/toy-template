@@ -1,9 +1,7 @@
-import { ApiProperty, PickType } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
-import { UserModel } from '../model/user.model';
+import { PickType } from '@nestjs/swagger';
+import { UserEntity } from 'src/users/database/entities/tbl_user_entity';
 
-export class CreateUserInput extends PickType(UserModel, [
+export class CreateUserInput extends PickType(UserEntity, [
   'email',
   'password',
 ]) {}
