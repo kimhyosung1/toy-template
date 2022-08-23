@@ -66,4 +66,47 @@ export class CAPAConfigService {
       <LoggerOptions>'error',
     );
   }
+
+  get jwtSecret(): string {
+    return this.configService.get<string>(
+      'JWT_SECRET',
+      'd00c3244f80e5d7dcb635e596f114ab1f5c68d57',
+    );
+  }
+
+  get accessTokenExprieTimeValue(): number {
+    return this.configService.get<number>('ACCESS_TOKEN_EXPIRE_TIME_VALUE', 30);
+  }
+
+  get accessTokenExpireTimeUnit(): ManipulateType {
+    return this.configService.get<ManipulateType>(
+      'ACCESS_TOKEN_EXPIRE_TIME_UNIT',
+      'minute',
+    );
+  }
+
+  get refreshTokenExprieTimeValue(): number {
+    return this.configService.get<number>('REFRESH_TOKEN_EXPIRE_TIME_VALUE', 1);
+  }
+
+  get refreshTokenExpireTimeUnit(): ManipulateType {
+    return this.configService.get<ManipulateType>(
+      'REFRESH_TOKEN_EXPIRE_TIME_UNIT',
+      <ManipulateType>'month',
+    );
+  }
+
+  get accessBOTokenExprieTimeValue(): number {
+    return this.configService.get<number>(
+      'BO_ACCESS_TOKEN_EXPIRE_TIME_VALUE',
+      200,
+    );
+  }
+
+  get accessBOTokenExpireTimeUnit(): ManipulateType {
+    return this.configService.get<ManipulateType>(
+      'BO_ACCESS_TOKEN_EXPIRE_TIME_UNIT',
+      'day',
+    );
+  }
 }

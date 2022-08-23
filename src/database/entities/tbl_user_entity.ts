@@ -1,3 +1,4 @@
+import { UserStatus } from 'src/common/common_type';
 import {
   BaseEntity,
   Column,
@@ -66,10 +67,10 @@ export class UserEntity extends BaseEntity {
     name: 'status',
     type: 'varchar',
     length: 255,
-    default: 'REGISTERED',
+    default: UserStatus.REGISTERED,
     comment: '상태 CAPAUserStatus',
   })
-  status!: string;
+  status!: UserStatus;
 
   /**
    * lastLoginAt

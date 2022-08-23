@@ -17,8 +17,6 @@ async function ormConfig(): Promise<TypeOrmModuleOptions> {
   const config: CAPAConfigService =
     cli.get<CAPAConfigService>(CAPAConfigService);
 
-  console.log('config =', config);
-
   const ormConfig: TypeOrmModuleOptions = {
     type: 'postgres',
     host: config.dbHost,
