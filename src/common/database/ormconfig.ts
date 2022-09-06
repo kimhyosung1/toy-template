@@ -3,19 +3,19 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
-import { CAPAConfigModule } from 'src/config/capa-config.module';
-import { CAPAConfigService } from 'src/config/capa-config.service';
+import { KHSConfigModule } from 'src/config/capa-config.module';
+import { KHSConfigService } from 'src/config/capa-config.service';
 
 // import { CAPANamingStrategy } from '.';
 
 async function ormConfig(): Promise<TypeOrmModuleOptions> {
   const cli = await NestFactory.create<NestExpressApplication>(
-    CAPAConfigModule,
+    KHSConfigModule,
   );
   cli.useGlobalPipes(new ValidationPipe());
 
-  const config: CAPAConfigService =
-    cli.get<CAPAConfigService>(CAPAConfigService);
+  const config: KHSConfigService =
+    cli.get<KHSConfigService>(KHSConfigService);
 
   const ormConfig: TypeOrmModuleOptions = {
     type: 'postgres',

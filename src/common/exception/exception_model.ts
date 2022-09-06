@@ -1,11 +1,11 @@
 import { HttpException } from '@nestjs/common';
-import { ErrorCode } from './error_code';
+import { KHSErrorCode } from './error_code';
 
-export class ToyException extends HttpException {
+export class KHSException extends HttpException {
   errorMessage?: string | null;
 
   constructor(
-    public code: ErrorCode,
+    public code: KHSErrorCode,
     public statusCode: number = 7829,
     errorMessage?: string | null,
   ) {

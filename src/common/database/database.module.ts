@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { CAPAConfigService } from 'src/config/capa-config.service';
+import { KHSConfigService } from 'src/config/capa-config.service';
 import { getMetadataArgsStorage } from 'typeorm';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: (
-        config: CAPAConfigService,
+        config: KHSConfigService,
       ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions => ({
         type: 'postgres',
         host: config.dbHost,
@@ -30,7 +30,7 @@ import { getMetadataArgsStorage } from 'typeorm';
         },
         // namingStrategy: new CAPANamingStrategy(),
       }),
-      inject: [CAPAConfigService],
+      inject: [KHSConfigService],
     }),
   ],
 })

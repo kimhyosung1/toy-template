@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CAPAConfigModule } from 'src/config/capa-config.module';
-import { CAPAConfigService } from 'src/config/capa-config.service';
+import { KHSConfigModule } from 'src/config/capa-config.module';
+import { KHSConfigService } from 'src/config/capa-config.service';
 import { UserRepository } from 'src/users/database/repositories/tbl_user.repository';
 import { UserDeviceTokenRepository } from 'src/users/database/repositories/tbl_user_token_repository';
 
@@ -10,11 +10,11 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [
-    CAPAConfigModule,
+    KHSConfigModule,
     TypeOrmModule.forFeature([UserRepository, UserDeviceTokenRepository]),
   ],
   controllers: [UserController],
-  providers: [UserService, CAPAConfigService],
+  providers: [UserService, KHSConfigService],
   exports: [UserService],
 })
 export class UserModule {}

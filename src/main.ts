@@ -2,13 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
-import { CAPAConfigService, Environment } from './config/capa-config.service';
+import { KHSConfigService, Environment } from './config/capa-config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const configService: CAPAConfigService =
-    app.get<CAPAConfigService>(CAPAConfigService);
+  const configService: KHSConfigService =
+    app.get<KHSConfigService>(KHSConfigService);
 
   if (configService.nodeEnv !== Environment.PRODUCTION) {
     const config = new DocumentBuilder()

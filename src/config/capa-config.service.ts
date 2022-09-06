@@ -15,7 +15,7 @@ export enum Environment {
 }
 
 @Injectable()
-export class CAPAConfigService {
+export class KHSConfigService {
   constructor(private readonly configService: ConfigService) {}
 
   @IsEnum(Environment)

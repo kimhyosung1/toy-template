@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
-import { ErrorCode } from 'src/common/error_code';
-import { ToyException } from 'src/common/exception_model';
+import { KHSErrorCode } from 'src/common/exception/error_code';
+import { KHSException } from 'src/common/exception/exception_model';
 import { Payload } from 'src/common/payload';
-import { CAPAConfigService } from 'src/config/capa-config.service';
+import { KHSConfigService } from 'src/config/capa-config.service';
 import { UserEntity } from 'src/users/database/entities/tbl_user_entity';
 import { UserRepository } from 'src/users/database/repositories/tbl_user.repository';
 import { UserDeviceTokenRepository } from 'src/users/database/repositories/tbl_user_token_repository';
 import { EntityManager, Repository } from 'typeorm';
 import { AuthenticationInput } from './dto/input/authenticate.input';
 import * as jwt from 'jsonwebtoken';
-import { Test } from '@nestjs/testing';
 import { CreateUserInput } from './dto/input/create_user.input';
 import { ReCreateAccessTokenInput, TokenRefreshInput } from './dto/input/token_refresh_input';
 import { plainToClass } from 'class-transformer';
 import { AuthenticationOutput } from './dto/output/authentication.output';
+import { CommonUserType } from 'src/common/common_type';
 
 @Injectable()
 export class UserService {
@@ -24,7 +24,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     @InjectRepository(UserDeviceTokenRepository)
     private readonly userDeviceTokenRepository: UserDeviceTokenRepository,
-    private readonly configService: CAPAConfigService,
+    private readonly configService: KHSConfigService,
   ) {}
 
   async getUser(): Promise<UserEntity> {
@@ -58,16 +58,13 @@ export class UserService {
     );
 
     const accessToken = await this.createAccessToken(
-      'khs.ai',
-      user,
       now,
       exp,
-      userRepository,
     );
 
     const tokenType = 'Bearer';
     const expiresIn = exp.unix();
-    const refreshToken = await this.createRefreshToken('capa.ai', user, now);
+    const refreshToken = await this.createRefreshToken(now);
     
     const result = plainToClass(AuthenticationOutput,{
       accessToken!: accessToken,
@@ -75,6 +72,7 @@ export class UserService {
       expiresIn!: expiresIn,
       refreshToken!: refreshToken,
     })
+    // user device 에 userid랑 같이 넣기
 
     return result;
   }
@@ -82,7 +80,7 @@ export class UserService {
   async authenticate(
     input: AuthenticationInput,
     entityManager: EntityManager,
-  ): Promise<UserEntity> {
+  ): Promise<AuthenticationOutput> {
     const userRepository = entityManager.getRepository(UserEntity);
 
     const user: UserEntity = await userRepository.findOne({
@@ -90,7 +88,7 @@ export class UserService {
     });
 
     if (user == null) {
-      throw new ToyException(ErrorCode.USER_NOT_FOUND);
+      throw new KHSException(KHSErrorCode.USER_NOT_FOUND);
     }
 
     // if ((await argon2.verify(user.password, input.password)) === false) {
@@ -123,17 +121,14 @@ export class UserService {
       await userDeviceTokenRepository.save(deviceToken);
     }
 
-    const accessToken = await this.createAccessToken(
-      'khs.ai',
-      user,
-      now,
-      exp,
-      userRepository,
-    );
-    const tokenType = 'Bearer';
-    const expiresIn = exp.unix();
-    const refreshToken = await this.createRefreshToken('capa.ai', user, now);
-    return user;
+    const data = {
+      accessToken: await this.createAccessToken(now, exp),
+      tokenType: 'Bearer',
+      expiresIn: exp.unix(),
+      refreshToken: await this.createRefreshToken(now),
+      redirectUrl: '',
+    } as AuthenticationOutput
+    return data;
   }
 
   async refreshAccessToken(
@@ -145,7 +140,7 @@ export class UserService {
       this.configService.jwtSecret,
     ) as Payload;
     if (payload.exp < dayjs().unix()) {
-      throw new ToyException(ErrorCode.TOKEN_EXPIRED, 7830);
+      throw new KHSException(KHSErrorCode.TOKEN_EXPIRED, 7830);
     }
 
     return this.recreateAccessToken(
@@ -167,7 +162,7 @@ export class UserService {
     });
 
     if (user == null) {
-      throw new ToyException(ErrorCode.USER_NOT_FOUND);
+      throw new KHSException(KHSErrorCode.USER_NOT_FOUND);
     }
 
     const now = dayjs();
@@ -177,21 +172,16 @@ export class UserService {
     );
 
     const accessToken: string = await this.createAccessToken(
-      'khs.ai',
-      user,
       now,
       exp,
-      userRepository,
     );
 
     const refreshToken: string = await this.createRefreshToken(
-      'khs.ai',
-      user,
       now,
     );
 
     if (accessToken == null || refreshToken == null) {
-      throw new ToyException(ErrorCode.ERROR);
+      throw new KHSException(KHSErrorCode.ERROR);
     }
 
     const tokenType = 'Bearer'
@@ -208,40 +198,30 @@ export class UserService {
   }
 
   private async createAccessToken(
-    iss: string,
-    user: UserEntity,
     now: dayjs.Dayjs,
     exp: dayjs.Dayjs,
-    userRepository: Repository<UserEntity>,
   ): Promise<string> {
-    await userRepository.update(
-      { id: user.id },
-      {
-        lastLoginAt: now.toDate(),
-        lastLogoutAt: exp.toDate(),
-      },
-    );
+    const scopes: CommonUserType[] = [];
+    scopes.push(CommonUserType.USER);
 
     return jwt.sign(
       {
-        iss: iss ? iss : 'khs.ai',
+        iss: 'khs.ai',
         sub: 'access',
         iat: now.unix(),
         exp: exp.unix(),
-        aud: user.email,
+        aud: CommonUserType.USER,
+        scope: CommonUserType.USER,
+        scopes: scopes,
       } as Payload,
       this.configService.jwtSecret,
     );
   }
 
-  private async createRefreshToken(
-    iss: string,
-    user: UserEntity,
-    iat: dayjs.Dayjs,
-  ): Promise<string> {
+  private async createRefreshToken(iat: dayjs.Dayjs): Promise<string> {
     return jwt.sign(
       {
-        iss: iss ? iss : 'khs.ai',
+        iss: 'khs.ai',
         sub: 'refresh',
         iat: iat.unix(),
         exp: iat
@@ -250,7 +230,8 @@ export class UserService {
             this.configService.refreshTokenExpireTimeUnit,
           )
           .unix(),
-        aud: user.email,
+        aud: CommonUserType.USER,
+        scope: CommonUserType.USER,
       } as Payload,
       this.configService.jwtSecret,
     );

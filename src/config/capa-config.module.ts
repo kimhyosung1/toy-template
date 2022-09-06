@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
-import { CAPAConfigService, Environment } from './capa-config.service';
+import { KHSConfigService, Environment } from './capa-config.service';
 
 @Global()
 @Module({
@@ -22,7 +22,7 @@ import { CAPAConfigService, Environment } from './capa-config.service';
       ],
     }),
   ],
-  providers: [ConfigService, CAPAConfigService],
-  exports: [ConfigService, CAPAConfigService],
+  providers: [ConfigService, KHSConfigService],
+  exports: [ConfigService, KHSConfigService],
 })
-export class CAPAConfigModule {}
+export class KHSConfigModule {}

@@ -1,3 +1,5 @@
+import { Expose } from 'class-transformer';
+import { IsNotEmpty, IsString } from 'class-validator';
 import {
   BaseEntity,
   Column,
@@ -19,6 +21,7 @@ export class UserTokenEntity extends BaseEntity {
     name: 'id',
     comment: '아이디',
   })
+  @Expose()
   id!: string;
 
   /**
@@ -28,6 +31,7 @@ export class UserTokenEntity extends BaseEntity {
    */
   @Column({ name: 'seq', type: 'int8', unique: true, comment: '순차 인덱스' })
   @Generated('increment')
+  @Expose()
   seq!: number;
 
   /**
@@ -39,6 +43,7 @@ export class UserTokenEntity extends BaseEntity {
     name: 'user_id',
     comment: '유저 아이디',
   })
+  @Expose()
   userId!: string;
 
   /**
@@ -50,6 +55,9 @@ export class UserTokenEntity extends BaseEntity {
     length: 1024,
     comment: '디바이스 토큰',
   })
+  @IsNotEmpty()
+  @Expose()
+  @IsString()
   deviceToken!: string;
 
   /**
@@ -61,6 +69,7 @@ export class UserTokenEntity extends BaseEntity {
     comment: '생성일',
     update: false,
   })
+  @Expose()
   createdAt!: Date;
 
   /**
@@ -71,5 +80,6 @@ export class UserTokenEntity extends BaseEntity {
     type: 'timestamptz',
     comment: '수정일',
   })
+  @Expose()
   updatedAt!: Date;
 }
