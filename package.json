@@ -1,7 +1,7 @@
 {
   "name": "khs-toy-template",
   "version": "0.0.1",
-  "description": "",
+  "description": "<p align=\"center\">   <a href=\"http://nestjs.com/\" target=\"blank\"><img src=\"https://nestjs.com/img/logo-small.svg\" width=\"200\" alt=\"Nest Logo\" /></a> </p>",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -22,7 +22,8 @@
     "typeorm:db": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config src/database/ormconfig.ts",
     "typeorm:db:show": "npm run typeorm:db migration:show",
     "typeorm:db:run": "npm run typeorm:db migration:run",
-    "typeorm:db:revert": "npm run typeorm:db migration:revert"
+    "typeorm:db:revert": "npm run typeorm:db migration:revert",
+    "doc": "jsdoc src -r"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -41,6 +42,7 @@
     "@nestjs/typeorm": "^7.1.5",
     "apollo-server": "^2.25.2",
     "apollo-server-express": "^2.25.2",
+    "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dayjs": "^1.10.5",
     "graphql": "^15.5.1",
@@ -48,6 +50,9 @@
     "graphql-redis-subscriptions": "^2.4.0",
     "graphql-subscriptions": "^1.2.1",
     "graphql-tools": "^7.0.5",
+    "jsdoc": "^3.6.11",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "pg": "^8.7.3",
     "psql": "0.0.1",
     "reflect-metadata": "^0.1.13",
@@ -55,10 +60,7 @@
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.1.5",
     "typeorm": "^0.2.34",
-    "uuid": "^8.3.2",
-    "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
-    "class-transformer": "^0.4.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -103,5 +105,18 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimhyosung1/toy-template.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/kimhyosung1/toy-template/issues"
+  },
+  "homepage": "https://github.com/kimhyosung1/toy-template#readme"
 }

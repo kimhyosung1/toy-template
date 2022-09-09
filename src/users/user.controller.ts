@@ -16,6 +16,9 @@ import { UserService } from './user.service';
 @Controller('khs')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+  /** @function getUser
+ * @return {UserEntity}
+ */
   @ApiBearerAuth('Authorization')
   @ApiResponse(DefaultException.UNAUTHORIZED.getResponse())
   @ApiResponse(DefaultException.TOKEN_EXPIRED.getResponse())
